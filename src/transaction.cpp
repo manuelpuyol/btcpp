@@ -28,12 +28,16 @@ ptree Transaction::to_json() const {
   return json;
 }
 
+transaction_map Transaction::get_map() const {
+  return members_map;
+}
+
 const bool Transaction::operator<(const Transaction &t) {
   return (hash < t.hash);
 }
 
 ostream &operator<<(ostream &os, const Transaction &t) {
-  write_json(os, t.to_json());
+  write_json(os, to_json(t));
 
   return os;
 }

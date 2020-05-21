@@ -39,16 +39,16 @@ ptree to_json(Fusion const &fusion);
 
 template <typename Fusion>
 struct JsonConverter {
-  JsonConverter(Fusion &_fusion, ptree *_json) : fusion(_fusion), json(_json) {}
+  JsonConverter(const Fusion &_fusion, ptree *_json) : fusion(_fusion), json(_json) {}
 
-  Fusion &fusion;
+  const Fusion &fusion;
   ptree *json;
 
   template <typename Index>
   void operator() (Index) {
 
     string member_name = struct_member_name<Fusion, Index::value>::call();
-    auto member_value = fusion.members_map[member_name];
+    auto member_value = fusion.get_map()[member_name];
 
     if constexpr(is_vector<typename value_at<Fusion, Index>::type>::value) {
       ptree j;
@@ -67,7 +67,7 @@ struct JsonConverter {
 };
 
 template<typename Fusion>
-ptree to_json(Fusion &fusion) {
+ptree to_json(Fusion const &fusion) {
   typedef range_c<unsigned, 0, size<Fusion>::value > Indices;
   ptree json;
 

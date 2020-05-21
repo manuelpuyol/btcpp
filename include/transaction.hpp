@@ -37,6 +37,7 @@ public:
 
   transaction_map members_map;
 
+  transaction_map get_map() const;
   ptree to_json() const;
 
   friend ostream &operator<<(ostream &os, const Transaction &t);

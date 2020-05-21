@@ -8,4 +8,7 @@ int main() {
 
   Transaction t(10);
   write_json(cout, to_json(t));
+
+  Header h(10, "123" , "456");
+  write_json(cout, to_json(h));
 }
