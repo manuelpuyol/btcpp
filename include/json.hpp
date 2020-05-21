@@ -50,19 +50,16 @@ public:
 
   template <typename T>
   void operator()(T value) const {
-    std::cout << member_name << " else" << std::endl;
     json->put(member_name, value);
   }
 
   template <typename T>
   void operator()(T *value) const {
-    std::cout << member_name << " is pointer" << std::endl;
-    // json->put(member_name, to_json(*value));
+    json->add_child(member_name, to_json(*value));
   }
 
   template <typename T>
   void operator()(vector<T> value) const {
-    std::cout << member_name << " is vector" << std::endl;
     ptree j;
 
     for (auto &item : value) {
@@ -101,5 +98,15 @@ ptree to_json(Fusion const &fusion) {
 
   return json;
 }
+
+// template<typename Fusion>
+// ptree to_json(Fusion *fusion) {
+//   typedef range_c<unsigned, 0, size<Fusion>::value > Indices;
+//   ptree json;
+
+//   for_each(Indices(), JsonConverter<Fusion>(*fusion, &json));
+
+//   return json;
+// }
 
 #endif
