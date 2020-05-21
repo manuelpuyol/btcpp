@@ -99,14 +99,4 @@ ptree to_json(Fusion const &fusion) {
   return json;
 }
 
-// template<typename Fusion>
-// ptree to_json(Fusion *fusion) {
-//   typedef range_c<unsigned, 0, size<Fusion>::value > Indices;
-//   ptree json;
-
-//   for_each(Indices(), JsonConverter<Fusion>(*fusion, &json));
-
-//   return json;
-// }
-
 #endif

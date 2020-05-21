@@ -35,7 +35,6 @@ public:
   header_map members_map;
 
   header_map get_map() const;
-  ptree to_json() const;
 
   friend ostream &operator<<(ostream &os, const Header &h);
   inline string to_string(const Header &header);

@@ -17,17 +17,6 @@ Transaction::Transaction(const ptree &json) :
   receiver(json.get<string>("receiver")),
   hash(json.get<string>("hash")) {}
 
-ptree Transaction::to_json() const {
-  ptree json;
-
-  json.put("value", value);
-  json.put("sender", sender);
-  json.put("receiver", receiver);
-  json.put("hash", hash);
-
-  return json;
-}
-
 transaction_map Transaction::get_map() const {
   return members_map;
 }

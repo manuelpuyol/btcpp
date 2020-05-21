@@ -124,7 +124,7 @@ void CLI::dump_blockchain() {
     return;
   }
 
-  write_json(ostrm, bc.to_json());
+  write_json(ostrm, to_json(bc));
   ostrm.close();
   cout << "Blockchain dump success" << endl;
 }
@@ -142,7 +142,7 @@ void CLI::dump_transactions() {
   ptree json;
   ptree aux;
   for(auto &t: transactions)
-    aux.push_back(std::make_pair("", t.to_json()));
+    aux.push_back(std::make_pair("", to_json(t)));
 
   json.add_child("transactions", aux);
   write_json(ostrm, json);

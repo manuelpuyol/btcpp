@@ -23,23 +23,8 @@ block_map Block::get_map() const {
   return members_map;
 }
 
-ptree Block::to_json() const {
-  ptree json;
-  ptree jheader = header.to_json();
-  ptree jtransactions;
-
-  for (auto &transaction : transactions)
-    jtransactions.push_back(std::make_pair("", transaction.to_json()));
-
-  json.put("ntransactions", ntransactions);
-  json.add_child("header", jheader);
-  json.add_child("transactions", jtransactions);
-
-  return json;
-}
-
 ostream &operator<<(ostream &os, const Block &b) {
-  write_json(os, b.to_json());
+  write_json(os, to_json(b));
 
   return os;
 }

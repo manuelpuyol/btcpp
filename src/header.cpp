@@ -17,17 +17,6 @@ Header::Header(const ptree &json) :
     members_map = generate_map(*this);
   }
 
-ptree Header::to_json() const {
-  ptree json;
-
-  json.put("nonce", nonce);
-  json.put("prev_hash", prev_hash);
-  json.put("hash", hash);
-  json.put("merkle_root", merkle_root);
-
-  return json;
-}
-
 header_map Header::get_map() const {
   return members_map;
 }

@@ -16,6 +16,7 @@ using std::vector;
 using std::string;
 using std::move;
 using std::ostream;
+using boost::variant;
 using boost::property_tree::ptree;
 using boost::property_tree::write_json;
 
@@ -34,7 +35,6 @@ public:
   block_map members_map;
 
   block_map get_map() const;
-  ptree to_json() const;
 
   friend ostream &operator<<(ostream &os, const Block &b);
 };
