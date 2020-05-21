@@ -4,9 +4,15 @@
 #include<string>
 #include<sstream>
 #include<iomanip>
+#include<iostream>
+#include<regex>
 #include<openssl/sha.h>
 
+using std::cout;
+using std::endl;
 using std::string;
+using std::regex;
+using std::regex_search;
 using std::stringstream;
 using std::hex;
 using std::setw;
@@ -16,20 +22,25 @@ using std::to_string;
 class Hash {
 public:
   Hash(int _difficulty) : difficulty(_difficulty) {
-    cmp = string(_difficulty, '0');
+    stringstream ss;
+    ss << "^0{" << _difficulty << "}|0{" << _difficulty << "}$";
+
+    r = regex(ss.str());
   }
 
-  int difficulty;
   string h;
-  string cmp;
 
   void set_h(const string &_h) {
     h = _h;
   }
 
   bool is_valid() {
-    return h.compare(0, difficulty, cmp) == 0;
+    return regex_search(h, r);
   }
+
+private:
+  int difficulty;
+  regex r;
 };
 
 template<class T>

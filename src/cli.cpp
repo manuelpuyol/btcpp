@@ -178,7 +178,7 @@ void CLI::help() {
   cout << "Here are the available commands you may use:" << endl << endl;
   cout << MINE << " - starts the btc++ miner" << endl;
   cout << CREATE << " {value} - creates a mock transaction with the specified value" << endl;
-  cout << CHANGE << " {new_difficulty} - changes the Blockchain difficulty (i.e. number of necessary 0 in hash)" << endl;
+  cout << CHANGE << " {new_difficulty} - changes the Blockchain difficulty (i.e. number of necessary 0 in start or end of hash)" << endl;
   cout << LOAD << " - loads a blockchain from files/blockchain.json and the transaction list from files/transactions.json" << endl;
   cout << DUMP << " - dumps the current blockchain to files/blockchain.json and the transaction list to files/transactions.json" << endl;
   cout << PRINT << " - prints the current blockchain to cout" << endl;
