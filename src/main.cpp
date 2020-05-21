@@ -2,10 +2,12 @@
 #include<json.hpp>
 
 int main() {
-  // CLI cli;
+  CLI cli;
 
-  // cli.run();
+  cli.run();
+}
 
+void test_json() {
   Transaction t(10);
   write_json(cout, to_json(t));
 

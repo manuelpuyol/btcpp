@@ -75,3 +75,7 @@ The mining process is fairly simple, the miner should follow this steps:
 9. If reached max nonce -> go to step 2
 
 This process should be parallelized to improve performance (each thread should receive a nonce interval).
+
+## Changes
+
+For MPCS 51045, see `CHANGELOG.md` to see what has changed.
