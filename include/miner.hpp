@@ -39,7 +39,6 @@ public:
   friend ostream &operator<<(ostream &os, const Miner &m);
 private:
   string prev_hash;
-  string cmp;
 
   vector<Transaction> transactions;
   unsigned int difficulty;

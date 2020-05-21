@@ -13,6 +13,25 @@ using std::setw;
 using std::setfill;
 using std::to_string;
 
+class Hash {
+public:
+  Hash(int _difficulty) : difficulty(_difficulty) {
+    cmp = string(_difficulty, '0');
+  }
+
+  int difficulty;
+  string h;
+  string cmp;
+
+  void set_h(const string &_h) {
+    h = _h;
+  }
+
+  bool is_valid() {
+    return h.compare(0, difficulty, cmp) == 0;
+  }
+};
+
 template<class T>
 string sha256(T object) {
   string str;

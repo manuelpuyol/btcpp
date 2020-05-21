@@ -9,8 +9,6 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
     sort(transactions.begin(), transactions.end());
     nthreads = thread::hardware_concurrency();
     bucket = ULONG_MAX / nthreads;
-    string s(_difficulty, '0');
-    cmp = s;
   };
 
 Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads) :
@@ -22,8 +20,6 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
   nthreads(_nthreads) {
     sort(transactions.begin(), transactions.end());
     bucket = ULONG_MAX / nthreads;
-    string s(_difficulty, '0');
-    cmp = s;
   };
 
 bool Miner::mine() {
@@ -59,19 +55,19 @@ void Miner::check_nonce(int id) {
   unsigned long test = id * bucket;
   unsigned long end = (id + 1) * bucket;
 
-  string hash;
+  Hash hash(difficulty);
   string object;
 
   while(test < end && !found) {
     object = prev_hash + root + to_string(test);
-    hash = mine_hash(object);
+    hash.set_h(mine_hash(object));
 
-    if(hash.compare(0, difficulty, cmp) == 0) {
+    if(hash.is_valid()) {
       cout << "Thread " << id << " found a block!" << endl;
       std::unique_lock<std::shared_mutex> lock(mtx);
       found = true;
       nonce = test;
-      result = hash;
+      result = hash.h;
     }
 
     test++;
