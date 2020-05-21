@@ -15,6 +15,8 @@
 #include<boost/fusion/include/adapt_struct.hpp>
 #include<boost/fusion/include/mpl.hpp>
 #include<boost/property_tree/ptree.hpp>
+#include<boost/variant/static_visitor.hpp>
+#include<boost/variant/apply_visitor.hpp>
 
 using std::vector;
 using std::false_type;
@@ -27,6 +29,8 @@ using boost::fusion::result_of::value_at;
 using boost::fusion::result_of::size;
 using boost::fusion::for_each;
 using boost::property_tree::ptree;
+using boost::static_visitor;
+using boost::apply_visitor;
 
 template<typename>
 struct is_vector : false_type {};
@@ -36,6 +40,38 @@ struct is_vector<vector<T,A>> : true_type {};
 
 template<typename Fusion>
 ptree to_json(Fusion const &fusion);
+
+class Visitor : public static_visitor<>{
+public:
+  Visitor(ptree *_json, const string &_member_name) : json(_json), member_name(_member_name) {}
+
+  ptree *json;
+  const string member_name;
+
+  template <typename T>
+  void operator()(T value) const {
+    std::cout << member_name << " else" << std::endl;
+    json->put(member_name, value);
+  }
+
+  template <typename T>
+  void operator()(T *value) const {
+    std::cout << member_name << " is pointer" << std::endl;
+    // json->put(member_name, to_json(*value));
+  }
+
+  template <typename T>
+  void operator()(vector<T> value) const {
+    std::cout << member_name << " is vector" << std::endl;
+    ptree j;
+
+    for (auto &item : value) {
+      j.push_back(make_pair("", to_json(item)));
+    }
+
+    json->add_child(member_name, j);
+  }
+};
 
 template <typename Fusion>
 struct JsonConverter {
@@ -47,22 +83,12 @@ struct JsonConverter {
   template <typename Index>
   void operator() (Index) {
 
+    using member_type = typename value_at<Fusion, Index>::type;
     string member_name = struct_member_name<Fusion, Index::value>::call();
     auto member_value = fusion.get_map()[member_name];
 
-    if constexpr(is_vector<typename value_at<Fusion, Index>::type>::value) {
-      ptree j;
-
-      for (auto &item : member_value) {
-        j.push_back(make_pair("", to_json(item)));
-      }
-
-      json->add_child(member_name, j);
-
-      return;
-    }
-
-    json->put(member_name, member_value);
+    Visitor v(json, member_name);
+    apply_visitor(v, member_value);
   }
 };
 
