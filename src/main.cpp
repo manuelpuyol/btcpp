@@ -1,7 +1,11 @@
 #include<cli.hpp>
+#include<json.hpp>
 
 int main() {
-  CLI cli;
+  // CLI cli;
 
-  cli.run();
+  // cli.run();
+
+  Transaction t(10);
+  write_json(cout, to_json(t));
 }

@@ -8,6 +8,7 @@ Transaction::Transaction(unsigned int _value) : value(_value) {
   sender = sha256(distr(eng));
   receiver = sha256(distr(eng));
   hash = sha256(*this);
+  members_map = generate_map(*this);
 }
 
 Transaction::Transaction(const ptree &json) :
@@ -39,4 +40,15 @@ ostream &operator<<(ostream &os, const Transaction &t) {
 
 string to_string(const Transaction &transaction) {
   return transaction.sender + transaction.receiver + to_string(transaction.value);;
+}
+
+transaction_map generate_map(Transaction &t) {
+  transaction_map m;
+
+  m["sender"] = t.sender;
+  m["receiver"] = t.receiver;
+  m["hash"] = t.hash;
+  m["value"] = t.value;
+
+  return m;
 }
