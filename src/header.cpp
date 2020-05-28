@@ -4,7 +4,7 @@ Header::Header(unsigned long _nonce, string _prev_hash, string _root) :
   nonce(_nonce),
   prev_hash(_prev_hash),
   merkle_root(_root) {
-  hash = mine_hash(*this);
+  hash = btc_hash(*this);
 
   members_map = generate_map(*this);
 }

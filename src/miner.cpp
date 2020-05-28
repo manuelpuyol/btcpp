@@ -60,7 +60,7 @@ void Miner::check_nonce(int id) {
 
   while(test < end && !found) {
     object = prev_hash + root + to_string(test);
-    hash.set_h(mine_hash(object));
+    hash.set_h(btc_hash(object));
 
     if(hash.is_valid()) {
       cout << "Thread " << id << " found a block!" << endl;

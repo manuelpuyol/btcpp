@@ -70,7 +70,7 @@ string double_sha256(T object) {
 }
 
 template<class T>
-string mine_hash(T object) {
+string btc_hash(T object) {
   return double_sha256(object);
 }
 
