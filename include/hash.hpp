@@ -65,13 +65,8 @@ string sha256(T object) {
 }
 
 template<class T>
-string double_sha256(T object) {
-  return sha256(sha256(object));
-}
-
-template<class T>
 string btc_hash(T object) {
-  return double_sha256(object);
+  return sha256(sha256(object));
 }
 
 #endif

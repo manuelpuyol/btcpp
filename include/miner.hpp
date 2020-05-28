@@ -49,6 +49,33 @@ private:
 
   void check_permutation();
   void check_nonce(int id);
+
+  template<class T>
+  virtual string mining_hash(T object) = 0;
 };
+
+class SSHAMiner : Miner {
+private:
+  template<class T>
+  string mining_hash(T object) {
+    return sha256(object);
+  }
+}
+
+class BTCMiner : Miner {
+private:
+  template<class T>
+  string mining_hash(T object) {
+    return btc_hash(object);
+  }
+}
+
+class TSHAMiner : Miner {
+private:
+  template<class T>
+  string mining_hash(T object) {
+    return sha256(sha256(sha256(object));;
+  }
+}
 
 #endif
