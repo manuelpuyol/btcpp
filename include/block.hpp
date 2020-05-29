@@ -7,6 +7,7 @@
 #include<map>
 #include<header.hpp>
 #include<transaction.hpp>
+#include<merkle_tree.hpp>
 #include<boost/variant.hpp>
 #include<boost/property_tree/ptree.hpp>
 #include<boost/property_tree/json_parser.hpp>
@@ -33,8 +34,11 @@ public:
   unsigned int ntransactions;
 
   block_map get_map() const;
+  bool is_valid();
 
   friend ostream &operator<<(ostream &os, const Block &b);
+private:
+  bool merkle_valid();
 };
 
 BOOST_FUSION_ADAPT_STRUCT(Block, header, transactions, ntransactions);

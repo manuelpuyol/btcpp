@@ -25,6 +25,21 @@ block_map Block::get_map() const {
   return m;
 }
 
+bool Block::is_valid() {
+  return header.is_valid() && merkle_valid();
+}
+
+bool Block::merkle_valid() {
+  vector<string> merkle_leaves;
+
+  for(auto &t: transactions)
+    merkle_leaves.push_back(t.hash);
+
+  MerkleTree mt(merkle_leaves);
+  
+  return mt.root.compare(header.merkle_root) == 0;
+}
+
 ostream &operator<<(ostream &os, const Block &b) {
   write_json(os, to_json(b));
 
