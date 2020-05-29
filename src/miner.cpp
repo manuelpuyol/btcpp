@@ -1,22 +1,24 @@
 #include<miner.hpp>
 
-Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty) :
+Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, int _number_of_sha) :
   transactions(_transactions),
   found(false),
   difficulty(_difficulty),
   nonce(0),
+  number_of_sha(_number_of_sha),
   prev_hash(_prev_hash) {
     sort(transactions.begin(), transactions.end());
     nthreads = thread::hardware_concurrency();
     bucket = ULONG_MAX / nthreads;
   };
 
-Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads) :
+Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads, int _number_of_sha) :
   transactions(_transactions),
   found(false),
   difficulty(_difficulty),
   nonce(0),
   prev_hash(_prev_hash),
+  number_of_sha(_number_of_sha),
   nthreads(_nthreads) {
     sort(transactions.begin(), transactions.end());
     bucket = ULONG_MAX / nthreads;
@@ -60,7 +62,7 @@ void Miner::check_nonce(int id) {
 
   while(test < end && !found) {
     object = prev_hash + root + to_string(test);
-    hash.set_h(btc_hash(object));
+    hash.set_h(mining_hash(object));
 
     if(hash.is_valid()) {
       cout << "Thread " << id << " found a block!" << endl;
@@ -72,6 +74,16 @@ void Miner::check_nonce(int id) {
 
     test++;
   }
+}
+
+string Miner::mining_hash(string object) {
+  string h = object;
+
+  for(auto i = 0; i < number_of_sha; i++) {
+    h = sha256(h);
+  }
+
+  return h;
 }
 
 ostream &operator<<(ostream &os, const Miner &m) {

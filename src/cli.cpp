@@ -1,6 +1,6 @@
 #include<cli.hpp>
 
-CLI::CLI() : running(true), bc(5) {}
+CLI::CLI() : running(true), bc(5), mining_hash(1) {}
 
 void CLI::run() {
   string cmd;
@@ -23,7 +23,7 @@ void CLI::mine() {
     return;
   }
 
-  Miner m(transactions, bc.last_hash(), bc.difficulty);
+  Miner m(transactions, bc.last_hash(), bc.difficulty, mining_hash);
 
   future<bool> result = async(&Miner::mine, &m);
 

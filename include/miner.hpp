@@ -27,8 +27,8 @@ using std::to_string;
 
 class Miner {
 public:
-  Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty);
-  Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads);
+  Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, int _number_of_sha);
+  Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads, int _number_of_sha);
 
   bool found;
   unsigned long nonce;
@@ -44,38 +44,14 @@ private:
   unsigned int difficulty;
   unsigned int nthreads;
   unsigned long bucket;
+  int number_of_sha;
 
   shared_mutex mutable mtx;
 
   void check_permutation();
   void check_nonce(int id);
 
-  template<class T>
-  virtual string mining_hash(T object) = 0;
+  string mining_hash(string object);
 };
-
-class SSHAMiner : Miner {
-private:
-  template<class T>
-  string mining_hash(T object) {
-    return sha256(object);
-  }
-}
-
-class BTCMiner : Miner {
-private:
-  template<class T>
-  string mining_hash(T object) {
-    return btc_hash(object);
-  }
-}
-
-class TSHAMiner : Miner {
-private:
-  template<class T>
-  string mining_hash(T object) {
-    return sha256(sha256(sha256(object));;
-  }
-}
 
 #endif

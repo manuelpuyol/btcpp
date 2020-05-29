@@ -20,6 +20,8 @@ using std::ofstream;
 using std::ifstream;
 using std::future;
 using std::async;
+using std::unique_ptr;
+using std::make_unique;
 using std::filesystem::path;
 using boost::algorithm::to_lower;
 using boost::property_tree::write_json;
@@ -43,6 +45,7 @@ private:
   Blockchain bc;
   vector<Transaction> transactions;
   bool running;
+  int mining_hash;
 
   void mine();
   void create();
