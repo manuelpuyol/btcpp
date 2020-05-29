@@ -32,8 +32,6 @@ public:
   string hash;
   string merkle_root;
 
-  header_map members_map;
-
   header_map get_map() const;
 
   friend ostream &operator<<(ostream &os, const Header &h);
@@ -41,7 +39,5 @@ public:
 };
 
 BOOST_FUSION_ADAPT_STRUCT(Header, nonce, prev_hash, hash, merkle_root);
-
-header_map generate_map(Header &h);
 
 #endif

@@ -35,8 +35,6 @@ public:
   string receiver;
   string hash;
 
-  transaction_map members_map;
-
   transaction_map get_map() const;
 
   friend ostream &operator<<(ostream &os, const Transaction &t);
@@ -45,7 +43,5 @@ public:
 };
 
 BOOST_FUSION_ADAPT_STRUCT(Transaction, value, sender, receiver, hash);
-
-transaction_map generate_map(Transaction &t);
 
 #endif

@@ -33,8 +33,6 @@ public:
   unsigned int nblocks;
   unsigned int difficulty;
 
-  blockchain_map members_map;
-
   void add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha);
   void add_initial_mock_block();
 
@@ -45,7 +43,5 @@ public:
 };
 
 BOOST_FUSION_ADAPT_STRUCT(Blockchain, blocks, nblocks, difficulty);
-
-blockchain_map generate_map(Blockchain &bc);
 
 #endif

@@ -1,15 +1,11 @@
 #include<blockchain.hpp>
 
-Blockchain::Blockchain(unsigned int _difficulty) : difficulty(_difficulty), nblocks(1) {
-  add_initial_mock_block();
-  members_map = generate_map(*this);
-}
+Blockchain::Blockchain(unsigned int _difficulty) : difficulty(_difficulty), nblocks(0) {}
 
 Blockchain::Blockchain(vector<Block> &&_blocks, unsigned int _difficulty) :
   blocks(move(_blocks)),
   difficulty(_difficulty) {
   nblocks = blocks.size();
-  members_map = generate_map(*this);
 }
 
 Blockchain::Blockchain(const ptree &json) :
@@ -17,13 +13,12 @@ Blockchain::Blockchain(const ptree &json) :
   nblocks(json.get<unsigned int>("nblocks")) {
   for(auto &element: json.get_child("blocks"))
     blocks.push_back(element.second);
-  members_map = generate_map(*this);
 }
 
 void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha) {
-  Header header(nonce, last_hash(), root,number_of_sha);
+  Header header(nonce, last_hash(), root, number_of_sha);
 
-  if(hash.compare(header.hash) != 0) {
+  if(nblocks > 0 && hash.compare(header.hash) != 0) {
     cout << "Invalid block!" << endl;
     return;
   }
@@ -34,33 +29,25 @@ void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long non
   nblocks++;
 }
 
-void Blockchain::add_initial_mock_block() {
-  Header h(0, "", sha256("mock"), 2);
-  Block b(move(h));
-
-  blocks.push_back(b);
-}
-
 string Blockchain::last_hash() {
+  if(nblocks == 0)
+    return "";
+
   return blocks.back().header.hash;
 }
 
 blockchain_map Blockchain::get_map() const {
-  return members_map;
+  blockchain_map m;
+
+  m["blocks"] = blocks;
+  m["nblocks"] = nblocks;
+  m["difficulty"] = difficulty;
+
+  return m;
 }
 
 ostream &operator<<(ostream &os, const Blockchain &bc) {
   write_json(os, to_json(bc));
 
   return os;
-}
-
-blockchain_map generate_map(Blockchain &bc) {
-  blockchain_map m;
-
-  m["blocks"] = bc.blocks;
-  m["nblocks"] = bc.nblocks;
-  m["difficulty"] = bc.difficulty;
-
-  return m;
 }

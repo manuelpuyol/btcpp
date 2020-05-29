@@ -20,7 +20,7 @@ using boost::variant;
 using boost::property_tree::ptree;
 using boost::property_tree::write_json;
 
-typedef map<string, variant<Header *, vector<Transaction>, unsigned int>> block_map;
+typedef map<string, variant<const Header *, vector<Transaction>, unsigned int>> block_map;
 
 class Block {
 public:
@@ -32,15 +32,11 @@ public:
   vector<Transaction> transactions;
   unsigned int ntransactions;
 
-  block_map members_map;
-
   block_map get_map() const;
 
   friend ostream &operator<<(ostream &os, const Block &b);
 };
 
 BOOST_FUSION_ADAPT_STRUCT(Block, header, transactions, ntransactions);
-
-block_map generate_map(Block &b);
 
 #endif

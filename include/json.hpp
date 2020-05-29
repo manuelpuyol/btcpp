@@ -82,7 +82,7 @@ struct JsonConverter {
 
     using member_type = typename value_at<Fusion, Index>::type;
     string member_name = struct_member_name<Fusion, Index::value>::call();
-    auto member_value = fusion.get_map()[member_name];
+    auto member_value = fusion.get_map().at(member_name);
 
     Visitor v(json, member_name);
     apply_visitor(v, member_value);
