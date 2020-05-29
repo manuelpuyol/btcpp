@@ -54,12 +54,30 @@ void CLI::create() {
   cout << "Transaction created" << endl;
 }
 
+void CLI::test() {
+  string path;
+  cin >> path;
+
+  if(cin.fail()) {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << endl << "Invalid input" << endl;
+
+    return;
+  }
+
+  Blockchain test_bc = load_blockchain_json(path);
+
+}
+
 void CLI::load() {
-  load_blockchain();
+  bc = load_blockchain_json("/files/blockchain.json");
+  cout << "Blockchain load success" << endl;
+
   load_transactions();
 }
 
-void CLI::load_blockchain() {
+ptree CLI::load_blockchain_json(string path) {
   string path = root_path() + "/files/blockchain.json";
 
   ifstream file(path);
@@ -72,10 +90,9 @@ void CLI::load_blockchain() {
   ptree json;
   read_json(file, json);
 
-  bc = json;
-
   file.close();
-  cout << "Blockchain load success" << endl;
+
+  return json;
 }
 
 void CLI::load_transactions() {
@@ -194,6 +211,7 @@ void CLI::help() {
   cout << "Here are the available commands you may use:" << endl << endl;
   cout << MINE << " - starts the btc++ miner" << endl;
   cout << CREATE << " {value} - creates a mock transaction with the specified value" << endl;
+  cout << TEST << " {file_path} - will test whether the blockchain is valid with the current parameters" << endl;
   cout << CHANGE << " {new_difficulty} - changes the Blockchain difficulty (i.e. number of necessary 0 in start or end of hash)" << endl;
   cout << SHA << " {num_of_sha} - changes the number of sha256 that will be run for hashing" << endl;
   cout << LOAD << " - loads a blockchain from files/blockchain.json and the transaction list from files/transactions.json" << endl;
@@ -227,6 +245,8 @@ void CLI::run_cmd(string &cmd) {
     create();
   else if (compare_cmd(cmd, MINE))
     mine();
+  else if (compare_cmd(cmd, TEST))
+    test();
   else
     cout << "Command " << cmd << " not found" << endl;
 }

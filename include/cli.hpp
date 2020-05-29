@@ -36,6 +36,7 @@ using boost::property_tree::read_json;
 #define PRINT "print"
 #define CREATE "create"
 #define MINE "mine"
+#define TEST "test"
 
 class CLI {
 public:
@@ -50,6 +51,7 @@ private:
 
   void mine();
   void create();
+  void test();
   void load();
   void dump();
   void print();
@@ -58,7 +60,7 @@ private:
   void help();
   void quit();
 
-  void load_blockchain();
+  ptree load_blockchain_json(string path);
   void load_transactions();
   void dump_blockchain();
   void dump_transactions();

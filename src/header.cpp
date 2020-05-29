@@ -1,9 +1,10 @@
 #include<header.hpp>
 
-Header::Header(unsigned long _nonce, string _prev_hash, string _root, int number_of_sha) :
+Header::Header(unsigned long _nonce, string _prev_hash, string _root, int _number_of_sha) :
   nonce(_nonce),
   prev_hash(_prev_hash),
-  merkle_root(_root) {
+  merkle_root(_root),
+  number_of_sha(_number_of_sha) {
   hash = sha256(*this, number_of_sha);
 }
 
@@ -22,6 +23,10 @@ header_map Header::get_map() const {
   m["hash"] = hash;
 
   return m;
+}
+
+bool Header::is_valid() {
+  return hash.compare(sha256(*this, number_of_sha)) == 0;
 }
 
 ostream &operator<<(ostream &os, const Header &h) {

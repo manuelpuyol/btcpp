@@ -24,15 +24,17 @@ typedef map<string, variant<string, unsigned long>> header_map;
 
 class Header {
 public:
-  Header(unsigned long _nonce, string _prev_hash, string _root, int number_of_sha);
+  Header(unsigned long _nonce, string _prev_hash, string _root, int _number_of_sha);
   Header(const ptree &json);
 
   unsigned long nonce;
   string prev_hash;
   string hash;
   string merkle_root;
+  int number_of_sha;
 
   header_map get_map() const;
+  bool is_valid();
 
   friend ostream &operator<<(ostream &os, const Header &h);
   inline string to_string(const Header &header);

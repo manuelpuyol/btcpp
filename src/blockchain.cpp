@@ -17,8 +17,9 @@ Blockchain::Blockchain(const ptree &json) :
 
 void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha) {
   Header header(nonce, last_hash(), root, number_of_sha);
+  header.hash = hash;
 
-  if(nblocks > 0 && hash.compare(header.hash) != 0) {
+  if(!header.is_valid()) {
     cout << "Invalid block!" << endl;
     return;
   }
