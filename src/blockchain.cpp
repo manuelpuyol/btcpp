@@ -47,6 +47,24 @@ blockchain_map Blockchain::get_map() const {
   return m;
 }
 
+bool Blockchain::is_valid() {
+  Hash hash(difficulty);
+  string last_hash;
+
+  for(auto &b: blocks) {
+    hash.set_h(b.header.hash);
+
+    if(
+      (!last_hash.empty() && b.header.prev_hash.compare(last_hash) != 0) ||
+      !hash.is_valid() ||
+      !b.is_valid()
+    )
+      return false;
+  }
+
+  return true;
+}
+
 ostream &operator<<(ostream &os, const Blockchain &bc) {
   write_json(os, to_json(bc));
 

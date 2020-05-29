@@ -38,6 +38,7 @@ public:
 
   string last_hash();
   blockchain_map get_map() const;
+  bool is_valid();
 
   friend ostream &operator<<(ostream &os, const Blockchain &bc);
 };
