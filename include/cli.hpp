@@ -30,6 +30,7 @@ using boost::property_tree::read_json;
 #define HELP "help"
 #define QUIT "quit"
 #define CHANGE "change"
+#define SHA "sha"
 #define LOAD "load"
 #define DUMP "dump"
 #define PRINT "print"
@@ -53,6 +54,7 @@ private:
   void dump();
   void print();
   void change();
+  void sha();
   void help();
   void quit();
 
