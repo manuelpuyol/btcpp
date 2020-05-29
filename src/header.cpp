@@ -1,10 +1,10 @@
 #include<header.hpp>
 
-Header::Header(unsigned long _nonce, string _prev_hash, string _root) :
+Header::Header(unsigned long _nonce, string _prev_hash, string _root, int number_of_sha) :
   nonce(_nonce),
   prev_hash(_prev_hash),
   merkle_root(_root) {
-  hash = btc_hash(*this);
+  hash = sha256(*this, number_of_sha);
 
   members_map = generate_map(*this);
 }

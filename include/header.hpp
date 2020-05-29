@@ -24,7 +24,7 @@ typedef map<string, variant<string, unsigned long>> header_map;
 
 class Header {
 public:
-  Header(unsigned long _nonce, string _prev_hash, string _root);
+  Header(unsigned long _nonce, string _prev_hash, string _root, int number_of_sha);
   Header(const ptree &json);
 
   unsigned long nonce;

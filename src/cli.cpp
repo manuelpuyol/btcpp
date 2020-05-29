@@ -1,6 +1,6 @@
 #include<cli.hpp>
 
-CLI::CLI() : running(true), bc(5), mining_hash(1) {}
+CLI::CLI() : running(true), bc(5), number_of_sha(2) {}
 
 void CLI::run() {
   string cmd;
@@ -23,7 +23,7 @@ void CLI::mine() {
     return;
   }
 
-  Miner m(transactions, bc.last_hash(), bc.difficulty, mining_hash);
+  Miner m(transactions, bc.last_hash(), bc.difficulty, number_of_sha);
 
   future<bool> result = async(&Miner::mine, &m);
 
@@ -33,7 +33,7 @@ void CLI::mine() {
   }
 
   if(result.get())
-    bc.add_block(move(transactions), m.nonce, m.root, m.result);
+    bc.add_block(move(transactions), m.nonce, m.root, m.result, number_of_sha);
   else
     cout << "Miner could not find a valid block" << endl;
 }

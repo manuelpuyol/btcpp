@@ -11,7 +11,7 @@ void test_json() {
   Transaction t(10);
   write_json(cout, to_json(t));
 
-  Header h(10, "123" , "456");
+  Header h(10, "123" , "456", 2);
   write_json(cout, to_json(h));
 
   vector<Transaction> v;

@@ -20,8 +20,8 @@ Blockchain::Blockchain(const ptree &json) :
   members_map = generate_map(*this);
 }
 
-void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash) {
-  Header header(nonce, last_hash(), root);
+void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha) {
+  Header header(nonce, last_hash(), root,number_of_sha);
 
   if(hash.compare(header.hash) != 0) {
     cout << "Invalid block!" << endl;
@@ -35,7 +35,7 @@ void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long non
 }
 
 void Blockchain::add_initial_mock_block() {
-  Header h(0, "", sha256("mock"));
+  Header h(0, "", sha256("mock"), 2);
   Block b(move(h));
 
   blocks.push_back(b);

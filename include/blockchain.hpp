@@ -35,7 +35,7 @@ public:
 
   blockchain_map members_map;
 
-  void add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash);
+  void add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha);
   void add_initial_mock_block();
 
   string last_hash();

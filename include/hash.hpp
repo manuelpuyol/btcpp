@@ -65,6 +65,16 @@ string sha256(T object) {
 }
 
 template<class T>
+string sha256(T object, int n) {
+  string h = sha256(object);
+
+  for(auto i = 1; i < n; i++)
+    h = sha256(h);
+
+  return h;
+}
+
+template<class T>
 string btc_hash(T object) {
   return sha256(sha256(object));
 }

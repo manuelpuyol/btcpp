@@ -62,7 +62,7 @@ void Miner::check_nonce(int id) {
 
   while(test < end && !found) {
     object = prev_hash + root + to_string(test);
-    hash.set_h(mining_hash(object));
+    hash.set_h(sha256(object, number_of_sha));
 
     if(hash.is_valid()) {
       cout << "Thread " << id << " found a block!" << endl;
@@ -74,16 +74,6 @@ void Miner::check_nonce(int id) {
 
     test++;
   }
-}
-
-string Miner::mining_hash(string object) {
-  string h = object;
-
-  for(auto i = 0; i < number_of_sha; i++) {
-    h = sha256(h);
-  }
-
-  return h;
 }
 
 ostream &operator<<(ostream &os, const Miner &m) {

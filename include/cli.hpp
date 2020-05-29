@@ -45,7 +45,7 @@ private:
   Blockchain bc;
   vector<Transaction> transactions;
   bool running;
-  int mining_hash;
+  int number_of_sha;
 
   void mine();
   void create();
