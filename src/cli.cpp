@@ -67,27 +67,32 @@ void CLI::test() {
   }
 
   Blockchain test_bc = load_blockchain_json(path);
+  test_bc.difficulty = bc.difficulty;
 
+  for(auto &b: test_bc.blocks)
+    b.header.number_of_sha = number_of_sha;
+
+  if(test_bc.is_valid())
+    cout << "Blockchain is valid" << endl;
+  else
+    cout << "Blockchain not valid" << endl;
 }
 
 void CLI::load() {
-  bc = load_blockchain_json("/files/blockchain.json");
-  cout << "Blockchain load success" << endl;
-
+  bc = load_blockchain_json("files/blockchain.json");
   load_transactions();
 }
 
-ptree CLI::load_blockchain_json(string path) {
-  string path = root_path() + "/files/blockchain.json";
-
+ptree CLI::load_blockchain_json(string relative_path) {
+  ptree json;
+  string path = root_path() + "/" + relative_path;
   ifstream file(path);
 
   if(!file.is_open()) {
     cout << "Error opening file: " << path << endl;
-    return;
+    return json;
   }
 
-  ptree json;
   read_json(file, json);
 
   file.close();
