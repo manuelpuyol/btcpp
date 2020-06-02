@@ -41,6 +41,4 @@ private:
   bool merkle_valid();
 };
 
-BOOST_FUSION_ADAPT_STRUCT(Block, header, transactions, ntransactions);
-
 #endif

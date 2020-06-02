@@ -42,6 +42,4 @@ public:
   inline string to_string(const Transaction &transaction);
 };
 
-BOOST_FUSION_ADAPT_STRUCT(Transaction, value, sender, receiver, hash);
-
 #endif

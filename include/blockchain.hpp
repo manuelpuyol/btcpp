@@ -43,6 +43,4 @@ public:
   friend ostream &operator<<(ostream &os, const Blockchain &bc);
 };
 
-BOOST_FUSION_ADAPT_STRUCT(Blockchain, blocks, nblocks, difficulty);
-
 #endif

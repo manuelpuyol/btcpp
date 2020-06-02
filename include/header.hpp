@@ -40,6 +40,4 @@ public:
   inline string to_string(const Header &header);
 };
 
-BOOST_FUSION_ADAPT_STRUCT(Header, nonce, prev_hash, hash, merkle_root);
-
 #endif
