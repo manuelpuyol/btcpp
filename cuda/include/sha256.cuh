@@ -1,6 +1,7 @@
 #ifndef SHA256_H
 #define SHA256_H
 
+#include<string>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -35,14 +36,6 @@
 typedef unsigned char BYTE;             // 8-bit byte
 typedef uint32_t  WORD;             // 32-bit word, change to "long" for 16-bit machines
 
-typedef struct JOB {
-  BYTE *data;
-  unsigned long long size;
-  BYTE digest[64];
-  char fname[128];
-}JOB;
-
-
 typedef struct {
   BYTE data[64];
   WORD datalen;
@@ -64,27 +57,10 @@ static const WORD host_k[64] = {
 };
 
 /*********************** FUNCTION DECLARATIONS **********************/
-char * print_sha(BYTE * buff);
 __device__ void sha256_init(SHA256_CTX *ctx);
-__device__ void sha256_update(SHA256_CTX *ctx, const BYTE data[], size_t len);
-__device__ void sha256_final(SHA256_CTX *ctx, BYTE hash[]);
+__device__ void sha256_update(SHA256_CTX *ctx, const BYTE *data, size_t len);
+__device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash);
 
-
-char * hash_to_string(BYTE * buff) {
-  char * string = (char *)malloc(70);
-  int k, i;
-  for (i = 0, k = 0; i < 32; i++, k+= 2)
-  {
-    sprintf(string + k, "%.2x", buff[i]);
-    //printf("%02x", buff[i]);
-  }
-  string[64] = 0;
-  return string;
-}
-
-void print_job(JOB * j){
-  printf("%s  %s\n", hash_to_string(j->digest), j->fname);
-}
 
 __device__ void mycpy12(uint32_t *d, const uint32_t *s) {
 #pragma unroll 3
@@ -116,7 +92,7 @@ __device__ void mycpy64(uint32_t *d, const uint32_t *s) {
     for (int k=0; k < 16; k++) d[k] = s[k];
 }
 
-__device__ void sha256_transform(SHA256_CTX *ctx, const BYTE data[])
+__device__ void sha256_transform(SHA256_CTX *ctx, const BYTE *data)
 {
   WORD a, b, c, d, e, f, g, h, i, j, t1, t2, m[64];
 
@@ -175,13 +151,11 @@ __device__ void sha256_init(SHA256_CTX *ctx)
   ctx->state[7] = 0x5be0cd19;
 }
 
-__device__ void sha256_update(SHA256_CTX *ctx, const BYTE data[], size_t len)
+__device__ void sha256_update(SHA256_CTX *ctx, const BYTE *data, size_t len)
 {
   WORD i;
 
-  // for each byte in message
   for (i = 0; i < len; ++i) {
-    // ctx->data == message 512 bit chunk
     ctx->data[ctx->datalen] = data[i];
     ctx->datalen++;
     if (ctx->datalen == 64) {
@@ -192,7 +166,7 @@ __device__ void sha256_update(SHA256_CTX *ctx, const BYTE data[], size_t len)
   }
 }
 
-__device__ void sha256_final(SHA256_CTX *ctx, BYTE hash[])
+__device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash)
 {
   WORD i;
 
