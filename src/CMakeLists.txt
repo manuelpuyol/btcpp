@@ -10,6 +10,6 @@ include_directories("${CMAKE_SOURCE_DIR}/include/")
 add_executable(btc++ ${sources})
 
 if(USE_CUDA)
-    include_directories("${CMAKE_SOURCE_DIR}/cuda/include/" "/opt/cuda/include/")
+    include_directories("${CMAKE_SOURCE_DIR}/cuda/include/" "/usr/local/cuda/include/")
     target_link_libraries(btc++ gpu)
 endif()

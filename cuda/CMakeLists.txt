@@ -3,7 +3,7 @@ project(gpu LANGUAGES CUDA)
 ################################################################################
 
 file(GLOB sources "${CMAKE_SOURCE_DIR}/cuda/src/*.cu")
-include_directories("${CMAKE_SOURCE_DIR}/cuda/include/" "/opt/cuda/include/")
+include_directories("${CMAKE_SOURCE_DIR}/cuda/include/" "/usr/local/cuda/include/")
 
 ################################################################################
 
