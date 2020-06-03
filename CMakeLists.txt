@@ -1,4 +1,4 @@
-project(btc++ LANGUAGES CXX)
+project(BTC++)
 
 cmake_minimum_required (VERSION 3.0.2)
 
@@ -17,28 +17,10 @@ find_package(CUDA REQUIRED)
 
 ################################################################################
 
-file(GLOB sources "${CMAKE_SOURCE_DIR}/src/*.cpp")
-file(GLOB cuda "${CMAKE_SOURCE_DIR}/src/*.cu")
-
-################################################################################
-
 if(USE_CUDA)
-    include_directories("/opt/cuda/include/")
-
-    set(CMAKE_CUDA_STANDARD 14)
-    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-    enable_language("CUDA")
-
-    add_library(gpu SHARED ${cuda})
-    target_include_directories(gpu PUBLIC "${CMAKE_SOURCE_DIR}/cuda_include/")
-    set_target_properties(gpu PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-
-    add_executable(btc++ ${sources})
-    target_include_directories(btc++ PUBLIC "${CMAKE_SOURCE_DIR}/include/")
-
-    target_link_libraries(btc++ gpu)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/cuda)
 
     add_definitions(-DUSE_CUDA)
-else(USE_CUDA)
-    add_executable(btc++ ${sources})
 endif()
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/src)

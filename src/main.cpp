@@ -7,8 +7,7 @@
 
 int main() {
 #ifdef USE_CUDA
-  std::cout << "CUDA: On" << std::endl;
-  printCudaVersion();
+  std::cout << gpuAdd(1,2) << std::endl;
 #else
   CLI cli;
 

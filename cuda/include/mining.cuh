@@ -4,6 +4,6 @@
 #include<cuda.h>
 #include<iostream>
 
-void printCudaVersion();
+int gpuAdd(int a, int b);
 
 #endif
