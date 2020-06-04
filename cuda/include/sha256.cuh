@@ -1,7 +1,6 @@
 #ifndef SHA256_H
 #define SHA256_H
 
-#include<string>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -10,8 +9,6 @@
 #include<dirent.h>
 #include<ctype.h>
 #include<cuda_sha256.hpp>
-
-using std::string;
 
 /****************************** MACROS ******************************/
 #define SHA256_BLOCK_SIZE 32            // SHA256 outputs a 32 byte digest
