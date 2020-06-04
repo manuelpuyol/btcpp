@@ -16,8 +16,7 @@ void pre_sha256() {
   checkCudaErrors(cudaMemcpyToSymbol(dev_k, host_k, sizeof(host_k), 0, cudaMemcpyHostToDevice));
 }
 
-void cuda_sha256() {
-  std::string str = "lol";
+void cuda_sha256(string str) {
   BYTE *buff = reinterpret_cast<unsigned char*>(const_cast<char*>(str.c_str()));
   BYTE *result = (BYTE *) malloc(SHA256_BLOCK_SIZE);
 

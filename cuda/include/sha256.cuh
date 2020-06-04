@@ -11,6 +11,8 @@
 #include<ctype.h>
 #include<cuda_sha256.hpp>
 
+using std::string;
+
 /****************************** MACROS ******************************/
 #define SHA256_BLOCK_SIZE 32            // SHA256 outputs a 32 byte digest
 

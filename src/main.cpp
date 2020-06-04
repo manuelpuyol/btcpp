@@ -7,7 +7,7 @@
 
 int main() {
 #ifdef USE_CUDA
-  cuda_sha256();
+  cuda_sha256("lol");
 #else
   // CLI cli;
 
