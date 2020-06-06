@@ -21,13 +21,13 @@ __device__ void verify(BYTE *hash, int difficulty, int *result) {
       cmp = 0x00;
     }
 
-    if(out[i] > cmp)
-      return
+    if(hash[i] > cmp)
+      return;
 
     aux -= 2;
   }
 
-  *result = 1
+  *result = 1;
 }
 
 #endif   // MINE_CUH
