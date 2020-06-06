@@ -4,12 +4,15 @@
 #include<cuda.h>
 #include<sha256.cuh>
 #include<cmine.hpp>
+#include<stdint.h>
+#include<inttypes.h>
 
 #define NOT_FOUND -1
 #define FOUND -1
 #define BLOCKS 1024
 #define THREADS 1024
 #define TOTAL BLOCKS * THREADS
+#define BUCKET 4096
 
 __device__ void verify(BYTE *hash, int difficulty, int *result) {
   int aux = difficulty;

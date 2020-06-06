@@ -57,6 +57,10 @@ void Miner::check_nonce(int id) {
   uint32_t test = id * bucket;
   uint32_t end = (id + 1) * bucket;
 
+  if(id == nthreads - 1) {
+    end = UINT32_MAX;
+  }
+
   Hash hash(difficulty);
   string object;
 
