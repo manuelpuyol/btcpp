@@ -20,14 +20,14 @@ using boost::variant;
 using boost::property_tree::ptree;
 using boost::property_tree::write_json;
 
-typedef map<string, variant<string, unsigned long>> header_map;
+typedef map<string, variant<string, uint32_t>> header_map;
 
 class Header {
 public:
-  Header(unsigned long _nonce, string _prev_hash, string _root, int _number_of_sha);
+  Header(uint32_t _nonce, string _prev_hash, string _root, int _number_of_sha);
   Header(const ptree &json);
 
-  unsigned long nonce;
+  uint32_t nonce;
   string prev_hash;
   string hash;
   string merkle_root;

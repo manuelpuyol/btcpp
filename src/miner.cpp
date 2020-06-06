@@ -21,7 +21,7 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
   number_of_sha(_number_of_sha),
   nthreads(_nthreads) {
     sort(transactions.begin(), transactions.end());
-    bucket = ULONG_MAX / nthreads;
+    bucket = UINT32_MAX / nthreads;
   };
 
 bool Miner::mine() {
@@ -54,8 +54,8 @@ void Miner::check_permutation() {
 }
 
 void Miner::check_nonce(int id) {
-  unsigned long test = id * bucket;
-  unsigned long end = (id + 1) * bucket;
+  uint32_t test = id * bucket;
+  uint32_t end = (id + 1) * bucket;
 
   Hash hash(difficulty);
   string object;

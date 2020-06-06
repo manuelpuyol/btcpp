@@ -6,7 +6,7 @@
 #include<thread>
 #include<shared_mutex>
 #include<vector>
-#include<climits>
+#include<stdint.h>
 #include<algorithm>
 #include<hash.hpp>
 #include<merkle_tree.hpp>
@@ -31,7 +31,7 @@ public:
   Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads, int _number_of_sha);
 
   bool found;
-  unsigned long nonce;
+  uint32_t nonce;
   string result;
   string root;
 
@@ -43,7 +43,7 @@ private:
   vector<Transaction> transactions;
   unsigned int difficulty;
   unsigned int nthreads;
-  unsigned long bucket;
+  uint32_t bucket;
   int number_of_sha;
 
   shared_mutex mutable mtx;

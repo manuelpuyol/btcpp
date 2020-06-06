@@ -1,8 +1,11 @@
 #include<mine.cuh>
 
 __global__ void mine(BYTE *in, BYTE *out, int size, int difficulty, int *result) {
-  csha256(in, out, size);
-  verify(out, difficulty, result);
+  int id = (blockIdx.x * blockDim.x) + threadIdx.x;
+
+  printf("id = %d\n ", id);
+  // csha256(in, out, size);
+  // verify(out, difficulty, result);
 }
 
 void cmine(string str, int difficulty) {
@@ -21,7 +24,7 @@ void cmine(string str, int difficulty) {
   cudaMemcpy(result, &res, sizeof(int), cudaMemcpyHostToDevice);
 
   pre_sha256();
-  mine <<< 1, 1 >>> (in, out, size, difficulty, result);
+  mine <<< BLOCKS, THREADS >>> (in, out, size, difficulty, result);
 
   cudaDeviceSynchronize();
 

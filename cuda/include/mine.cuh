@@ -7,6 +7,9 @@
 
 #define NOT_FOUND -1
 #define FOUND -1
+#define BLOCKS 1024
+#define THREADS 1024
+#define TOTAL BLOCKS * THREADS
 
 __device__ void verify(BYTE *hash, int difficulty, int *result) {
   int aux = difficulty;
