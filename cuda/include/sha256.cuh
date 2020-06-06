@@ -214,30 +214,11 @@ __device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash)
   }
 }
 
-__device__ void csha256(BYTE *in, BYTE *out, int size, int difficulty, int *result) {
+__device__ void csha256(BYTE *in, BYTE *out, int size) {
   SHA256_CTX ctx;
   sha256_init(&ctx);
   sha256_update(&ctx, in, size);
   sha256_final(&ctx, out);
-
-  int aux = difficulty;
-  int blocks = (difficulty + 1) / 2;
-
-  *result = 1;
-  for(int i = 0; i < blocks; i++) {
-    unsigned char cmp;
-
-    if(aux == 1) {
-      cmp = 0x0F;
-    } else {
-      cmp = 0x00;
-    }
-
-    if(out[i] > cmp && out[SHA256_BLOCK_SIZE - 1 - i] > cmp)
-      *result = -1;
-
-    aux -= 2;
-  }
 }
 
 void pre_sha256() {

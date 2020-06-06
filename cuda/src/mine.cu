@@ -1,14 +1,15 @@
 #include<mine.cuh>
 
 __global__ void mine(BYTE *in, BYTE *out, int size, int difficulty, int *result) {
-  csha256(in, out, size, difficulty, result);
+  csha256(in, out, size);
+  verify(out, difficulty, result);
 }
 
 void cmine(string str, int difficulty) {
   BYTE *buff = reinterpret_cast<unsigned char*>(const_cast<char*>(str.c_str()));
 
   int size = str.length();
-  int res;
+  int res = NOT_FOUND;
   BYTE *in, *out;
   int *result;
 
@@ -17,6 +18,7 @@ void cmine(string str, int difficulty) {
   cudaMalloc((void **)&result, sizeof(int));
 
   cudaMemcpy(in, buff, size * sizeof(BYTE), cudaMemcpyHostToDevice);
+  cudaMemcpy(result, &res, sizeof(int), cudaMemcpyHostToDevice);
 
   pre_sha256();
   mine <<< 1, 1 >>> (in, out, size, difficulty, result);
