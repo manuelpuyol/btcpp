@@ -8,13 +8,13 @@
 #include<inttypes.h>
 
 #define NOT_FOUND -1
-#define FOUND -1
+#define FOUND 1
 #define BLOCKS 1024
 #define THREADS 1024
 #define TOTAL BLOCKS * THREADS
 #define BUCKET 4096
 
-__device__ void verify(BYTE *hash, int difficulty, int *result) {
+__device__ bool verify(BYTE *hash, int difficulty, int *result) {
   int aux = difficulty;
   int blocks = (difficulty + 1) / 2;
 
@@ -28,12 +28,13 @@ __device__ void verify(BYTE *hash, int difficulty, int *result) {
     }
 
     if(hash[i] > cmp)
-      return;
+      return false;
 
     aux -= 2;
   }
 
-  *result = 1;
+  *result = FOUND;
+  return true;
 }
 
 #endif   // MINE_CUH

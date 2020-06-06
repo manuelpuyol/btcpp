@@ -8,6 +8,6 @@ using std::string;
 using std::cout;
 using std::endl;
 
-void cmine(string str, int difficulty);
+uint32_t cmine(string str, int difficulty);
 
 #endif
