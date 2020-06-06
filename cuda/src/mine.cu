@@ -1,0 +1,33 @@
+#include<mine.cuh>
+
+__global__ void mine(BYTE *in, BYTE *out, int size, int difficulty, int *result) {
+  csha256(in, out, size, difficulty, result);
+}
+
+void cmine(string str, int difficulty) {
+  BYTE *buff = reinterpret_cast<unsigned char*>(const_cast<char*>(str.c_str()));
+
+  int size = str.length();
+  int res;
+  BYTE *in, *out;
+  int *result;
+
+  cudaMalloc((void **)&in, size);
+  cudaMalloc((void **)&out, SHA256_BLOCK_SIZE);
+  cudaMalloc((void **)&result, sizeof(int));
+
+  cudaMemcpy(in, buff, size * sizeof(BYTE), cudaMemcpyHostToDevice);
+
+  pre_sha256();
+  mine <<< 1, 1 >>> (in, out, size, difficulty, result);
+
+  cudaDeviceSynchronize();
+
+  cudaMemcpy(&res, result, sizeof(int), cudaMemcpyDeviceToHost);
+
+  cout << "result = " << res << endl;
+
+  cudaFree(in);
+  cudaFree(out);
+  cudaFree(result);
+}

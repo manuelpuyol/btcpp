@@ -1,5 +1,7 @@
-#ifndef SHA256_H
-#define SHA256_H
+#ifndef SHA256_CUH
+#define SHA256_CUH
+
+// Based on https://github.com/Horkyze/CudaSHA256 with some modifications
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -8,7 +10,6 @@
 #include<cuda.h>
 #include<dirent.h>
 #include<ctype.h>
-#include<cuda_sha256.hpp>
 
 /****************************** MACROS ******************************/
 #define SHA256_BLOCK_SIZE 32            // SHA256 outputs a 32 byte digest
@@ -59,6 +60,8 @@ static const WORD host_k[64] = {
 __device__ void sha256_init(SHA256_CTX *ctx);
 __device__ void sha256_update(SHA256_CTX *ctx, const BYTE *data, size_t len);
 __device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash);
+__device__ void csha256(BYTE *in, BYTE *out, int size, int difficulty, int *result);
+void pre_sha256();
 
 
 __device__ void mycpy12(uint32_t *d, const uint32_t *s) {
@@ -211,4 +214,34 @@ __device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash)
   }
 }
 
-#endif   // SHA256_H
+__device__ void csha256(BYTE *in, BYTE *out, int size, int difficulty, int *result) {
+  SHA256_CTX ctx;
+  sha256_init(&ctx);
+  sha256_update(&ctx, in, size);
+  sha256_final(&ctx, out);
+
+  int aux = difficulty;
+  int blocks = (difficulty + 1) / 2;
+
+  *result = 1;
+  for(int i = 0; i < blocks; i++) {
+    unsigned char cmp;
+
+    if(aux == 1) {
+      cmp = 0x0F;
+    } else {
+      cmp = 0x00;
+    }
+
+    if(out[i] > cmp && out[SHA256_BLOCK_SIZE - 1 - i] > cmp)
+      *result = -1;
+
+    aux -= 2;
+  }
+}
+
+void pre_sha256() {
+  checkCudaErrors(cudaMemcpyToSymbol(dev_k, host_k, sizeof(host_k), 0, cudaMemcpyHostToDevice));
+}
+
+#endif   // SHA256_CUH
