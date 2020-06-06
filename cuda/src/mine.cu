@@ -3,21 +3,15 @@
 __global__ void mine(BYTE *in, int *result, uint32_t *nonce, int size, int difficulty) {
   int id = (blockIdx.x * blockDim.x) + threadIdx.x;
 
-  uint32_t ntest = id * BUCKET;
+  uint32_t test = 12345;
   uint32_t end = (id + 1) * BUCKET;
 
   if(id == TOTAL - 1) {
     end = UINT32_MAX;
   }
 
-  BYTE *btest = (BYTE *) malloc(size);
-  BYTE *hash = (BYTE *) malloc(SHA256_BLOCK_SIZE);
-
-  memcpy(btest, in, size);
-
-  csha256(btest, hash, size);
-  if(verify(hash, difficulty, result)) {
-    *nonce = ntest;
+  if(verify(in, test, size, difficulty, result)) {
+    *nonce = test;
   }
 }
 
@@ -32,6 +26,9 @@ uint32_t cmine(string str, int difficulty) {
   BYTE *in;
   int *result;
   uint32_t *nonce;
+  
+  uint32_t x = 1234;
+  int length = snprintf( NULL, 0, "%" PRIu32, x );
 
   cudaMalloc((void **)&in, size);
   cudaMalloc((void **)&result, sizeof(int));
