@@ -12,3 +12,7 @@ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 add_library(gpu SHARED ${sources})
 set_target_properties(gpu PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
+if(BENCHMARK)
+    add_definitions(-DBENCHMARK)
+endif()

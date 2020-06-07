@@ -14,7 +14,14 @@ using std::get;
 #define BLOCKS 512
 #define THREADS 512
 #define TOTAL BLOCKS * THREADS
-#define BUCKET (UINT32_MAX / uint32_t(TOTAL)) + 1
+
+#ifdef BENCHMARK
+#define MAX_NONCE uint32_t(1024 * 1024)
+#define BUCKET uint32_t(4)
+#else
+#define MAX_NONCE UINT32_MAX
+#define BUCKET (MAX_NONCE / uint32_t(TOTAL)) + 1
+#endif
 
 tuple<int, uint32_t> cmine(string str, int difficulty);
 

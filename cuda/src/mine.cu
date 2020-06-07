@@ -5,9 +5,8 @@ __global__ void mine(BYTE *in, int *found, uint32_t *nonce, int size, int diffic
 
   uint32_t test = uint32_t(id) * BUCKET;
   uint32_t end = id == TOTAL - 1
-    ? UINT32_MAX
+    ? MAX_NONCE
     : uint32_t(id + 1) * BUCKET;
-
 
   while(test < end && *found != FOUND) {
     if(verify(id, in, test, size, difficulty, found)) {

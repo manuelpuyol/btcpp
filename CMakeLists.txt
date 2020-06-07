@@ -3,6 +3,7 @@ project(BTC++)
 cmake_minimum_required (VERSION 3.0.2)
 
 option(USE_CUDA "Use CUDA" ON)
+option(BENCHMARK "Benchmark hashes per second" OFF)
 
 ################################################################################
 
@@ -21,6 +22,10 @@ if(USE_CUDA)
     add_subdirectory(${CMAKE_SOURCE_DIR}/cuda)
 
     add_definitions(-DUSE_CUDA)
+endif()
+
+if(BENCHMARK)
+    add_definitions(-DBENCHMARK)
 endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)

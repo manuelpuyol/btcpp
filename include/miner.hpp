@@ -12,12 +12,26 @@
 #include<merkle_tree.hpp>
 #include<transaction.hpp>
 
+#ifdef BENCHMARK
+#define MAX_NONCE uint32_t(1024 * 1024)
+#else
+#define MAX_NONCE UINT32_MAX
+#endif
+
 #ifdef USE_CUDA
 #include<cmine.hpp>
 #include<tuple>
 
 using std::tuple;
 using std::get;
+#endif
+
+#ifdef BENCHMARK
+#include<chrono>
+
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::seconds;
 #endif
 
 using std::vector;
@@ -45,6 +59,12 @@ public:
 
   bool mine();
   friend ostream &operator<<(ostream &os, const Miner &m);
+
+#ifdef BENCHMARK
+  Miner();
+  void benchmark();
+#endif
+
 private:
   string prev_hash;
 
@@ -57,11 +77,14 @@ private:
   shared_mutex mutable mtx;
 
   void check_permutation();
-  void cpu_check();
+  void run_check();
+
 #ifdef USE_CUDA
   void gpu_check();
-#endif
+#else
+  void cpu_check();
   void check_nonce(int id);
+#endif
 
   string mining_hash(string object);
 };
