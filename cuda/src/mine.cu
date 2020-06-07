@@ -1,7 +1,7 @@
 #include<mine.cuh>
 
 __global__ void mine(BYTE *in, int *found, uint32_t *nonce, int size, int difficulty) {
-  int id = (blockIdx.x * blockDim.x) + threadIdx.x;
+  uint32_t id = (blockIdx.x * blockDim.x) + threadIdx.x;
 
   uint32_t test = uint32_t(id) * BUCKET;
   uint32_t end = id == TOTAL - 1
@@ -38,8 +38,6 @@ tuple<int, uint32_t> cmine(string str, int difficulty) {
 
   pre_sha256();
   mine<<< BLOCKS, THREADS >>>(in, found, nonce, size, difficulty);
-
-  cudaDeviceSynchronize();
 
   cudaMemcpy(&res, found, sizeof(int), cudaMemcpyDeviceToHost);
   cudaMemcpy(&n, nonce, sizeof(uint32_t), cudaMemcpyDeviceToHost);

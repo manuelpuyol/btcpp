@@ -31,7 +31,7 @@ using std::get;
 
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
-using std::chrono::seconds;
+using std::chrono::milliseconds;
 #endif
 
 using std::vector;

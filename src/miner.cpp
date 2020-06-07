@@ -136,11 +136,11 @@ void Miner::benchmark() {
   run_check();
   auto stop = high_resolution_clock::now();
 
-  auto duration = duration_cast<seconds>(stop - start); 
-  auto seconds = duration.count();
+  auto duration = duration_cast<milliseconds>(stop - start);
+  auto milliseconds = duration.count();
 
-  cout << "Took " << seconds << " seconds" << endl;
-  cout << MAX_NONCE / seconds << " Hashes per second" << endl;
+  cout << "Took " << milliseconds << " milliseconds" << endl;
+  cout << (MAX_NONCE / milliseconds) * 1000 << " Hashes per second" << endl;
 }
 #endif
 
