@@ -25,7 +25,11 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
   };
 
 bool Miner::mine() {
+#ifdef USE_CUDA
+  cout << "Starting mining pool using GPU" << endl;
+#else
   cout << "Starting mining pool using " << nthreads << " threads" << endl;
+#endif
   check_permutation();
 
   while(next_permutation(transactions.begin(), transactions.end()) && !found) {
@@ -36,8 +40,6 @@ bool Miner::mine() {
 }
 
 void Miner::check_permutation() {
-  vector<thread> threads;
-
   vector<string> merkle_leaves;
 
   for(auto &t: transactions)
@@ -46,12 +48,43 @@ void Miner::check_permutation() {
   MerkleTree mt(merkle_leaves);
   root = mt.root;
 
+  #ifdef USE_CUDA
+    gpu_check();
+  #else
+    cpu_check();
+  #endif
+}
+
+void Miner::cpu_check() {
+  vector<thread> threads;
   for(int i = 0; i < nthreads; i++)
     threads.emplace_back(&Miner::check_nonce, this, i + 1);
 
   for(auto &t: threads)
     t.join();
 }
+
+#ifdef USE_CUDA
+void Miner::gpu_check() {
+  string test = prev_hash + root;
+  tuple<int, uint32_t> res = cmine(test, difficulty);
+
+  if(get<0>(res) == FOUND) {
+    uint32_t n = get<1>(res);
+
+    Hash hash(difficulty);
+    hash.set_h(sha256(test + to_string(n), 2));
+
+    // double check
+    if(hash.is_valid()) {
+      cout << "GPU found a block!" << endl;
+      found = true;
+      nonce = n;
+      result = hash.h;
+    }
+  }
+}
+#endif
 
 void Miner::check_nonce(int id) {
   uint32_t test = id * bucket;

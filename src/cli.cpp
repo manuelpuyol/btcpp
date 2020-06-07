@@ -193,6 +193,7 @@ void CLI::change() {
   cout << "Difficulty change success" << endl;
 }
 
+#ifndef USE_CUDA
 void CLI::sha() {
   unsigned int sha;
   cin >> sha;
@@ -208,6 +209,7 @@ void CLI::sha() {
   number_of_sha = sha;
   cout << "Number of SHA changed successfully" << endl;
 }
+#endif
 
 void CLI::help() {
   cout << endl << "Welcome to my MPCS 51044 final project - BTC++!" << endl;
@@ -218,7 +220,9 @@ void CLI::help() {
   cout << CREATE << " {value} - creates a mock transaction with the specified value" << endl;
   cout << TEST << " {file_path} - will test whether the blockchain is valid with the current parameters" << endl;
   cout << CHANGE << " {new_difficulty} - changes the Blockchain difficulty (i.e. number of necessary 0 in start or end of hash)" << endl;
+#ifndef USE_CUDA
   cout << SHA << " {num_of_sha} - changes the number of sha256 that will be run for hashing" << endl;
+#endif
   cout << LOAD << " - loads a blockchain from files/blockchain.json and the transaction list from files/transactions.json" << endl;
   cout << DUMP << " - dumps the current blockchain to files/blockchain.json and the transaction list to files/transactions.json" << endl;
   cout << PRINT << " - prints the current blockchain to cout" << endl;
@@ -238,8 +242,10 @@ void CLI::run_cmd(string &cmd) {
     quit();
   else if (compare_cmd(cmd, CHANGE))
     change();
+#ifndef USE_CUDA
   else if (compare_cmd(cmd, SHA))
     sha();
+#endif
   else if (compare_cmd(cmd, LOAD))
     load();
   else if (compare_cmd(cmd, DUMP))

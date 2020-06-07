@@ -12,6 +12,14 @@
 #include<merkle_tree.hpp>
 #include<transaction.hpp>
 
+#ifdef USE_CUDA
+#include<cmine.hpp>
+#include<tuple>
+
+using std::tuple;
+using std::get;
+#endif
+
 using std::vector;
 using std::cout;
 using std::endl;
@@ -49,6 +57,10 @@ private:
   shared_mutex mutable mtx;
 
   void check_permutation();
+  void cpu_check();
+#ifdef USE_CUDA
+  void gpu_check();
+#endif
   void check_nonce(int id);
 
   string mining_hash(string object);

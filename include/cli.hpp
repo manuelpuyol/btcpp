@@ -56,7 +56,9 @@ private:
   void dump();
   void print();
   void change();
+#ifndef USE_CUDA
   void sha();
+#endif
   void help();
   void quit();
 
