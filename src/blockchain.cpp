@@ -15,7 +15,7 @@ Blockchain::Blockchain(const ptree &json) :
     blocks.push_back(element.second);
 }
 
-void Blockchain::add_block(vector<Transaction> &&transactions, unsigned long nonce, string root, string hash, int number_of_sha) {
+void Blockchain::add_block(vector<Transaction> &&transactions, uint32_t nonce, string root, string hash, int number_of_sha) {
   Header header(nonce, last_hash(), root, number_of_sha);
   header.hash = hash;
 

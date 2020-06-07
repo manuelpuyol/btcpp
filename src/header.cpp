@@ -1,6 +1,6 @@
 #include<header.hpp>
 
-Header::Header(unsigned long _nonce, string _prev_hash, string _root, int _number_of_sha) :
+Header::Header(uint32_t _nonce, string _prev_hash, string _root, int _number_of_sha) :
   nonce(_nonce),
   prev_hash(_prev_hash),
   merkle_root(_root),
@@ -9,7 +9,7 @@ Header::Header(unsigned long _nonce, string _prev_hash, string _root, int _numbe
 }
 
 Header::Header(const ptree &json) :
-  nonce(json.get<unsigned long>("nonce")),
+  nonce(json.get<uint32_t>("nonce")),
   prev_hash(json.get<string>("prev_hash")),
   hash(json.get<string>("hash")),
   merkle_root(json.get<string>("merkle_root")) {}
