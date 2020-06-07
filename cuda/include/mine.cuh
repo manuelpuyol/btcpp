@@ -7,14 +7,7 @@
 #include<stdint.h>
 #include<inttypes.h>
 
-#define NOT_FOUND -1
-#define FOUND 1
-#define BLOCKS 1024
-#define THREADS 1024
-#define TOTAL BLOCKS * THREADS
-#define BUCKET 4096
-
-__device__ volatile unsigned char chars[11] = "0123456789";
+__device__ volatile BYTE chars[11] = "0123456789";
 
 __device__ BYTE uint32_to_byte(uint32_t val) {
   return chars[val];
@@ -62,12 +55,16 @@ __device__ BYTE *join_input_and_nonce(BYTE *input, uint32_t nonce, int size) {
   return bytes;
 }
 
-__device__ bool verify(BYTE *input, uint32_t nonce, int size, int difficulty, int *result) {
+__device__ bool verify(int id, BYTE *input, uint32_t nonce, int size, int difficulty, int *found) {
+  BYTE *first = (BYTE *) malloc(SHA256_BLOCK_SIZE);
   BYTE *hash = (BYTE *) malloc(SHA256_BLOCK_SIZE);
   BYTE *test = join_input_and_nonce(input, nonce, size);
 
-  printf("test = %s\n", test);
-  csha256(test, hash, size);
+  csha256(test, first, size + nonce_size(nonce));
+  csha256(get_sha_string(first), hash, SHA256_STRING_SIZE);
+
+  free(first);
+  free(test);
 
   int aux = difficulty;
   int blocks = (difficulty + 1) / 2;
@@ -81,13 +78,15 @@ __device__ bool verify(BYTE *input, uint32_t nonce, int size, int difficulty, in
       cmp = 0x00;
     }
 
-    if(hash[i] > cmp)
+    if(hash[i] > cmp) {
+      free(hash);
       return false;
+    }
 
     aux -= 2;
   }
 
-  *result = FOUND;
+  *found = FOUND;
 
   free(hash);
   return true;

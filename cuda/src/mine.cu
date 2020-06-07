@@ -1,21 +1,24 @@
 #include<mine.cuh>
 
-__global__ void mine(BYTE *in, int *result, uint32_t *nonce, int size, int difficulty) {
+__global__ void mine(BYTE *in, int *found, uint32_t *nonce, int size, int difficulty) {
   int id = (blockIdx.x * blockDim.x) + threadIdx.x;
 
-  uint32_t test = 12345;
-  uint32_t end = (id + 1) * BUCKET;
+  uint32_t test = uint32_t(id) * BUCKET;
+  uint32_t end = id == TOTAL - 1
+    ? UINT32_MAX
+    : uint32_t(id + 1) * BUCKET;
 
-  if(id == TOTAL - 1) {
-    end = UINT32_MAX;
-  }
 
-  if(verify(in, test, size, difficulty, result)) {
-    *nonce = test;
+  while(test < end && *found != FOUND) {
+    if(verify(id, in, test, size, difficulty, found)) {
+      *nonce = test;
+    }
+
+    test++;
   }
 }
 
-uint32_t cmine(string str, int difficulty) {
+tuple<int, uint32_t> cmine(string str, int difficulty) {
   // host
   BYTE *buff = reinterpret_cast<unsigned char*>(const_cast<char*>(str.c_str()));
   int size = str.length();
@@ -24,33 +27,27 @@ uint32_t cmine(string str, int difficulty) {
 
   // device
   BYTE *in;
-  int *result;
+  int *found;
   uint32_t *nonce;
-  
-  uint32_t x = 1234;
-  int length = snprintf( NULL, 0, "%" PRIu32, x );
 
   cudaMalloc((void **)&in, size);
-  cudaMalloc((void **)&result, sizeof(int));
+  cudaMalloc((void **)&found, sizeof(int));
   cudaMalloc((void **)&nonce, sizeof(uint32_t));
 
   cudaMemcpy(in, buff, size * sizeof(BYTE), cudaMemcpyHostToDevice);
-  cudaMemcpy(result, &res, sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(found, &res, sizeof(int), cudaMemcpyHostToDevice);
 
   pre_sha256();
-  mine<<< 1, 1 >>>(in, result, nonce, size, difficulty);
+  mine<<< BLOCKS, THREADS >>>(in, found, nonce, size, difficulty);
 
   cudaDeviceSynchronize();
 
-  cudaMemcpy(&res, result, sizeof(int), cudaMemcpyDeviceToHost);
+  cudaMemcpy(&res, found, sizeof(int), cudaMemcpyDeviceToHost);
   cudaMemcpy(&n, nonce, sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-  cout << "result = " << res << endl;
-  cout << "nonce = " << n << endl;
-
   cudaFree(in);
-  cudaFree(result);
+  cudaFree(found);
   cudaFree(nonce);
 
-  return n;
+  return std::make_tuple(res, n);
 }

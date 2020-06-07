@@ -13,6 +13,7 @@
 
 /****************************** MACROS ******************************/
 #define SHA256_BLOCK_SIZE 32            // SHA256 outputs a 32 byte digest
+#define SHA256_STRING_SIZE 64
 
 #define ROTLEFT(a,b) (((a) << (b)) | ((a) >> (32-(b))))
 #define ROTRIGHT(a,b) (((a) >> (b)) | ((a) << (32-(b))))
@@ -56,11 +57,15 @@ static const WORD host_k[64] = {
   0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
 };
 
+__device__ volatile char hex[17] = "0123456789abcdef";
+
 /*********************** FUNCTION DECLARATIONS **********************/
 __device__ void sha256_init(SHA256_CTX *ctx);
 __device__ void sha256_update(SHA256_CTX *ctx, const BYTE *data, size_t len);
 __device__ void sha256_final(SHA256_CTX *ctx, BYTE *hash);
 __device__ void csha256(BYTE *in, BYTE *out, int size, int difficulty, int *result);
+__device__ BYTE *get_sha_string(BYTE *hash);
+
 void pre_sha256();
 
 
@@ -221,8 +226,27 @@ __device__ void csha256(BYTE *in, BYTE *out, int size) {
   sha256_final(&ctx, out);
 }
 
+__device__ BYTE *get_sha_string(BYTE *hash) {
+  BYTE *pin = hash;
+
+  BYTE str[SHA256_STRING_SIZE];
+  BYTE *pout = str;
+
+  for(int i = 0; i < SHA256_BLOCK_SIZE - 1; ++i) {
+      *pout++ = hex[(*pin>>4)&0xF];
+      *pout++ = hex[(*pin++)&0xF];
+  }
+
+  *pout++ = hex[(*pin>>4)&0xF];
+  *pout++ = hex[(*pin)&0xF];
+  *pout = 0;
+
+  return str;
+}
+
+
 void pre_sha256() {
   checkCudaErrors(cudaMemcpyToSymbol(dev_k, host_k, sizeof(host_k), 0, cudaMemcpyHostToDevice));
 }
 
-#endif   // SHA256_CUH
+#endif   // SHA256_CUHhash

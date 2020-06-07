@@ -9,7 +9,7 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
   prev_hash(_prev_hash) {
     sort(transactions.begin(), transactions.end());
     nthreads = thread::hardware_concurrency();
-    bucket = ULONG_MAX / nthreads;
+    bucket = UINT32_MAX / uint32_t(nthreads);
   };
 
 Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsigned int _difficulty, unsigned int _nthreads, int _number_of_sha) :
@@ -21,7 +21,7 @@ Miner::Miner(vector<Transaction> &_transactions, const string &_prev_hash, unsig
   number_of_sha(_number_of_sha),
   nthreads(_nthreads) {
     sort(transactions.begin(), transactions.end());
-    bucket = UINT32_MAX / nthreads;
+    bucket = UINT32_MAX / uint32_t(nthreads);
   };
 
 bool Miner::mine() {
