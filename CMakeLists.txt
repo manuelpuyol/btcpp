@@ -2,7 +2,7 @@ project(BTC++)
 
 cmake_minimum_required (VERSION 3.0.2)
 
-option(USE_CUDA "Use CUDA" ON)
+option(USE_CUDA "Use CUDA" OFF)
 option(BENCHMARK "Benchmark hashes per second" OFF)
 
 ################################################################################

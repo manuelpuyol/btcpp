@@ -11,3 +11,13 @@ Then, you can simply call `to_json(object)` and it should work.
 ### Hashing
 
 Changed hash methods to receive the number of times they have to run. This will make the blockchain more dynamic.
+
+### GPU
+
+Added a GPU miner using CUDA. It only supports BTCHash (doubla sha256) and verifies only 0s at the start of the hash.
+To use it make sure to add `-DUSE_CUDA=ON` to `cmake` before building.
+
+### Benchmark
+
+Added benchmark mode to calculate hash rate of CPU vs GPU.
+To use it, make suro to add `-DBENCHMARK=ON` to `cmake` before building.
